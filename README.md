@@ -1,5 +1,9 @@
 # ExoKotlinAudioPoc
-Prova de conceito de Audio player usando kotlin e exoplayer
+Prova de conceito de Audio player usando kotlin e exoplayer // POC  about exoPlayer with Kotlin
+
+Nesse projeto é construido um player multimida que executa em backgorund atraves de uma notificação.
+
+
 
 Fontes de estudo // References
 
