@@ -17,6 +17,7 @@ import com.example.exokotlinaudiopoc.Constants.PLAYBACK_CHANNEL_ID
 import com.example.exokotlinaudiopoc.Constants.PLAYBACK_NOTIFICATION_ID
 import com.example.exokotlinaudiopoc.Samples.SAMPLES
 import com.google.android.exoplayer2.C
+import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.audio.AudioAttributes
@@ -30,6 +31,7 @@ import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.google.android.exoplayer2.ui.PlayerNotificationManager.BitmapCallback
 import com.google.android.exoplayer2.ui.PlayerNotificationManager.MediaDescriptionAdapter
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
+import com.google.android.exoplayer2.util.Log
 import com.google.android.exoplayer2.util.Util
 
 
@@ -59,7 +61,7 @@ class AudioPlayerService : Service() {
         val dataSourceFactory = DefaultDataSourceFactory(context, Util.getUserAgent(context, getString(R.string.app_name))) // constroi uma fonte de dados
         player = SimpleExoPlayer.Builder(context).setTrackSelector(DefaultTrackSelector(context)).build() //Constroi um player
         player?.playWhenReady = true
-        
+
         //Daqui pra baixo configura o gerenciador do player em notificação
         buildSingleMediaSource(dataSourceFactory) //se esse estiver sendo chamado comentar o buildConcatMediaSources
         //  buildConcatMediaSources(dataSourceFactory) //se esse estiver sendo chamado comentar o buildSingleMediaSource
@@ -118,15 +120,23 @@ class AudioPlayerService : Service() {
                 }
             },
             object : PlayerNotificationManager.NotificationListener { //Captura as interações com a notificação
-                override fun onNotificationStarted(
+                override fun onNotificationCancelled(
                     notificationId: Int,
-                    notification: Notification
+                    dismissedByUser: Boolean
                 ) {
-                    startForeground(notificationId, notification) //Inicializa o serviço em foreground
+                    super.onNotificationCancelled(notificationId, dismissedByUser)
+                    if  (dismissedByUser) {
+                        stopSelf()
+                    }
                 }
 
-                override fun onNotificationCancelled(notificationId: Int) {
-                    stopSelf()
+                override fun onNotificationPosted(
+                    notificationId: Int,
+                    notification: Notification,
+                    ongoing: Boolean
+                ) {
+                    super.onNotificationPosted(notificationId, notification, ongoing)
+                    startForeground(notificationId, notification) //Inicializa o serviço em foreground
                 }
             }
         )
@@ -189,6 +199,25 @@ class AudioPlayerService : Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         return START_STICKY
+    }
+
+    inner class PlaybackStateListener : Player.EventListener { // descobre estado do player
+        override fun onPlayerStateChanged(
+            playWhenReady: Boolean,
+            playbackState: Int
+        ) {
+            var stateString: String
+            when (playbackState) {
+                ExoPlayer.STATE_IDLE -> stateString = "ExoPlayer.STATE_IDLE      -"
+                ExoPlayer.STATE_BUFFERING -> stateString = "ExoPlayer.STATE_BUFFERING -"
+                ExoPlayer.STATE_READY -> stateString = "ExoPlayer.STATE_READY     -"
+                ExoPlayer.STATE_ENDED -> {
+                    stateString = "ExoPlayer.STATE_ENDED     -"
+                    stateString = "UNKNOWN_STATE             -"
+                }
+                else -> stateString = "UNKNOWN_STATE             -"
+            }
+        }
     }
 }
 
