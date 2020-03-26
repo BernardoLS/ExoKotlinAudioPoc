@@ -41,6 +41,7 @@ Nesse projeto foi utilizado a biblioteca ExoPlayer da google, para criar um play
 ----------------------------------------------------------------------------------------------------------------------------------------
 
 *O que faltou:*
+- Validar comportamento do serviço/player ao desligar internet, ficar em uma conexão instavel e modo avião no smartphone
 - Fazer a notificação ser clicavel e ao clickar abrir o app;
 - Melhorar o controle da seekBar(barra de progresso da faixa de audio/video).
 - Aprender a usar os estado do player de forma efetiva. Estados(IDLE, BUFFERING, READY, ENDED, UNKNOW).
