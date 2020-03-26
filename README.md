@@ -42,7 +42,8 @@ Nesse projeto foi utilizado a biblioteca ExoPlayer da google, para criar um play
 
 *O que faltou:*
 - Fazer a notificação ser clicavel e ao clickar abrir o app;
-- Melhorar o controle da seekBar(barra de progresso da faixa de audio/video)
-- Aprender a usar os estado do player de forma efetiva. Estados(IDLE, BUFFERING, READY, ENDED, UNKNOW) 
+- Melhorar o controle da seekBar(barra de progresso da faixa de audio/video).
+- Aprender a usar os estado do player de forma efetiva. Estados(IDLE, BUFFERING, READY, ENDED, UNKNOW).
 - Validar uso de variaveis locais (usando a biblioteca Hawk, talvez?) para controlar a faixa atual e o tempo atual da mesma.
-- validar se esse jeito é o melhor para implentear um serviço.
+- Validar se esse jeito é o melhor para implentear um serviço.
+- Entender melhor os limites das costumizações de layout da playerView.
